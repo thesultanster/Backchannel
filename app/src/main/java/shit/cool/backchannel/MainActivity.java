@@ -4,10 +4,12 @@ package shit.cool.backchannel;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
@@ -49,6 +51,11 @@ public class MainActivity extends AppCompatActivity {
     SimpleArcLoader smallerarc;
     SimpleArcLoader inenrArc;
     SimpleArcLoader outerArc;
+    TextView displayText;
+    ImageView imageView;
+
+    String code;
+    int currentPane = 0;
 
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -59,15 +66,23 @@ public class MainActivity extends AppCompatActivity {
             if (result.getText() != null) {
                 barcodeView.setStatusText(result.getText());
             }
-            //Added preview of scanned barcode
-            ImageView imageView = (ImageView) findViewById(R.id.barcodePreview);
+            //Added preview of scanned barcodef
             imageView.setImageBitmap(result.getBitmapWithResultPoints(Color.YELLOW));
 
-            TextView displayText = (TextView) findViewById(R.id.displayText);
-            displayText.setText(result.toString());
+            Integer num = Integer.parseInt(result.toString().substring(0, 2));
+            displayText.setText(String.valueOf(num));
 
 
-            Log.d("result", result.toString());
+            if (num >= currentPane) {
+                currentPane = num + 1;
+                Log.d("result", result.toString());
+                code += result.toString().substring(3);
+                displayText.setText("Completed");
+            } else {
+                //displayText.setText("Scanning");
+            }
+
+
         }
 
         @Override
@@ -96,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
         barcodeView.setStatusText("");
         barcodeView.pause();
 
+        displayText = (TextView) findViewById(R.id.displayText);
+        imageView = (ImageView) findViewById(R.id.barcodePreview);
         screen = (RelativeLayout) findViewById(R.id.screen);
         view = (View) findViewById(R.id.enableButton);
         view.setOnTouchListener(new View.OnTouchListener() {
@@ -104,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         Log.d("DOWN", "DOWN");
+                        code = "";
                         //screen.setVisibility(View.GONE);
                         smallerarc.setVisibility(View.VISIBLE);
                         inenrArc.setVisibility(View.VISIBLE);
@@ -112,7 +130,10 @@ public class MainActivity extends AppCompatActivity {
                         return true;
 
                     case MotionEvent.ACTION_UP:
-                        Log.d("UP", "UP");
+                        Log.d("UP", code);
+                        displayText.setText(code);
+                        currentPane = 0;
+                        imageView.setImageBitmap(StringToBitMap(code));
                         //screen.setVisibility(View.VISIBLE);
                         smallerarc.setVisibility(View.GONE);
                         inenrArc.setVisibility(View.GONE);
@@ -169,6 +190,21 @@ public class MainActivity extends AppCompatActivity {
         return bmp;
     }
 
+
+    /**
+     * @param encodedString
+     * @return bitmap (from given string)
+     */
+    public Bitmap StringToBitMap(String encodedString) {
+        try {
+            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
+        }
+    }
 
 
     public void triggerScan(View view) {
