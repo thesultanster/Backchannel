@@ -16,7 +16,6 @@
     </com.journeyapps.barcodescanner.CompoundBarcodeView>
 
 
-
     <RelativeLayout
         android:id="@+id/screen"
         android:layout_width="match_parent"
@@ -33,76 +32,82 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
+            android:text="test"
             android:textColor="@color/white"
-            android:textSize="25dp"
-            android:text="test"/>
+            android:textSize="20dp" />
 
-        <LinearLayout
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="130dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="50dp"
-            android:background="@color/backgroundCard"
-            android:orientation="vertical">
+            android:background="@color/backgroundCard">
 
-            <RelativeLayout
-                android:id="@+id/loadingAnimation"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@color/backgroundCard">
 
-                <ImageView
-                    android:id="@+id/barcodePreview"
+
+                <RelativeLayout
+                    android:id="@+id/loadingAnimation"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/target"
-                    android:layout_margin="15dp"/>
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/barcodePreview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:layout_margin="15dp"
+                        android:background="@drawable/target" />
 
 
-                <com.leo.simplearcloader.SimpleArcLoader
-                    android:id="@+id/smallerarc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerInParent="true"
-                    android:layout_margin="90dp"
-                    android:visibility="gone"
-                    custom:arc_margin="10dp"
-                    custom:arc_speed="fast"
-                    custom:arc_style="complete_arc"
-                    custom:theme="@style/AppTheme"></com.leo.simplearcloader.SimpleArcLoader>
+                    <com.leo.simplearcloader.SimpleArcLoader
+                        android:id="@+id/smallerarc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:layout_margin="90dp"
+                        android:visibility="gone"
+                        custom:arc_margin="10dp"
+                        custom:arc_speed="fast"
+                        custom:arc_style="complete_arc"
+                        custom:theme="@style/AppTheme"></com.leo.simplearcloader.SimpleArcLoader>
 
-                <com.leo.simplearcloader.SimpleArcLoader
-                    android:id="@+id/innerArc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerInParent="true"
-                    android:layout_margin="60dp"
-                    android:visibility="gone"
-                    custom:arc_margin="10dp"
-                    custom:arc_speed="medium"
-                    custom:arc_style="complete_arc"
-                    custom:theme="@style/AppTheme"></com.leo.simplearcloader.SimpleArcLoader>
+                    <com.leo.simplearcloader.SimpleArcLoader
+                        android:id="@+id/innerArc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:layout_margin="60dp"
+                        android:visibility="gone"
+                        custom:arc_margin="10dp"
+                        custom:arc_speed="medium"
+                        custom:arc_style="complete_arc"
+                        custom:theme="@style/AppTheme"></com.leo.simplearcloader.SimpleArcLoader>
 
-                <com.leo.simplearcloader.SimpleArcLoader
-                    android:id="@+id/outerArc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerInParent="true"
-                    android:layout_margin="30dp"
-                    android:visibility="gone"
-                    custom:arc_margin="10dp"
-                    custom:arc_speed="slow"
-                    custom:arc_style="complete_arc"></com.leo.simplearcloader.SimpleArcLoader>
-            </RelativeLayout>
+                    <com.leo.simplearcloader.SimpleArcLoader
+                        android:id="@+id/outerArc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:layout_margin="30dp"
+                        android:visibility="gone"
+                        custom:arc_margin="10dp"
+                        custom:arc_speed="slow"
+                        custom:arc_style="complete_arc"></com.leo.simplearcloader.SimpleArcLoader>
+                </RelativeLayout>
 
-        </LinearLayout>
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
 
 
     </RelativeLayout>
-
-
 
 
     <View
