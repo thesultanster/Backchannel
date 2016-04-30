@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:lib="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <com.journeyapps.barcodescanner.CompoundBarcodeView
         android:id="@+id/barcode_scanner"
@@ -12,17 +15,12 @@
 
     </com.journeyapps.barcodescanner.CompoundBarcodeView>
 
-    <Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/primaryColor"/>
+
 
     <RelativeLayout
         android:id="@+id/screen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
         android:background="@color/background">
 
         <View
@@ -30,48 +28,82 @@
             android:layout_height="90dp"
             android:background="@color/primaryColor" />
 
-
+        <TextView
+            android:id="@+id/displayText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/white"
+            android:textSize="25dp"
+            android:text="test"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="50dp"
+            android:layout_marginBottom="130dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:layout_marginBottom="130dp"
+            android:layout_marginTop="50dp"
             android:background="@color/backgroundCard"
             android:orientation="vertical">
 
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/loadingAnimation"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/backgroundCard"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/barcodePreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/target"
+                    android:layout_margin="15dp"/>
 
 
-            </LinearLayout>
+                <com.leo.simplearcloader.SimpleArcLoader
+                    android:id="@+id/smallerarc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="90dp"
+                    android:visibility="gone"
+                    custom:arc_margin="10dp"
+                    custom:arc_speed="fast"
+                    custom:arc_style="complete_arc"
+                    custom:theme="@style/AppTheme"></com.leo.simplearcloader.SimpleArcLoader>
+
+                <com.leo.simplearcloader.SimpleArcLoader
+                    android:id="@+id/innerArc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="60dp"
+                    android:visibility="gone"
+                    custom:arc_margin="10dp"
+                    custom:arc_speed="medium"
+                    custom:arc_style="complete_arc"
+                    custom:theme="@style/AppTheme"></com.leo.simplearcloader.SimpleArcLoader>
+
+                <com.leo.simplearcloader.SimpleArcLoader
+                    android:id="@+id/outerArc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="30dp"
+                    android:visibility="gone"
+                    custom:arc_margin="10dp"
+                    custom:arc_speed="slow"
+                    custom:arc_style="complete_arc"></com.leo.simplearcloader.SimpleArcLoader>
+            </RelativeLayout>
 
         </LinearLayout>
-
 
 
     </RelativeLayout>
 
 
-    <TextView
-        android:id="@+id/displayText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="LYRICS"
-        android:textColor="#FFFFFF"
-        android:textSize="45dp" />
 
-    <ImageView
-        android:id="@+id/barcodePreview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
 
     <View
         android:id="@+id/enableButton"
@@ -81,8 +113,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="25dp"
         android:background="@drawable/circle" />
-
-
 
 
 </RelativeLayout>

@@ -6,12 +6,15 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -26,6 +29,9 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.CompoundBarcodeView;
+import com.leo.simplearcloader.ArcConfiguration;
+import com.leo.simplearcloader.SimpleArcDialog;
+import com.leo.simplearcloader.SimpleArcLoader;
 
 import org.w3c.dom.Text;
 
@@ -35,11 +41,14 @@ import java.util.List;
  * This sample performs continuous scanning, displaying the barcode and source image whenever
  * a barcode is scanned.
  */
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     RelativeLayout screen;
     View view;
     Toolbar toolbar;
+    SimpleArcLoader smallerarc;
+    SimpleArcLoader inenrArc;
+    SimpleArcLoader outerArc;
 
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -74,12 +83,18 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Back Channel");
+        //toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //toolbar.setTitle("Back Channel");
+
+        getSupportActionBar().setElevation(0);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
 
         barcodeView = (CompoundBarcodeView) findViewById(R.id.barcode_scanner);
         barcodeView.decodeContinuous(callback);
         barcodeView.setStatusText("");
+        barcodeView.pause();
 
         screen = (RelativeLayout) findViewById(R.id.screen);
         view = (View) findViewById(R.id.enableButton);
@@ -89,13 +104,19 @@ public class MainActivity extends Activity {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         Log.d("DOWN", "DOWN");
-                        screen.setVisibility(View.GONE);
+                        //screen.setVisibility(View.GONE);
+                        smallerarc.setVisibility(View.VISIBLE);
+                        inenrArc.setVisibility(View.VISIBLE);
+                        outerArc.setVisibility(View.VISIBLE);
                         barcodeView.resume();
                         return true;
 
                     case MotionEvent.ACTION_UP:
                         Log.d("UP", "UP");
-                        screen.setVisibility(View.VISIBLE);
+                        //screen.setVisibility(View.VISIBLE);
+                        smallerarc.setVisibility(View.GONE);
+                        inenrArc.setVisibility(View.GONE);
+                        outerArc.setVisibility(View.GONE);
                         barcodeView.pause();
                         return true;
                 }
@@ -106,6 +127,24 @@ public class MainActivity extends Activity {
         });
 
 
+        ArcConfiguration configuration = new ArcConfiguration(this);
+        configuration.setLoaderStyle(SimpleArcLoader.STYLE.COMPLETE_ARC);
+        int[] array = {Color.parseColor("#27ae60"), Color.parseColor("#212121"), Color.parseColor("#27ae60"), Color.parseColor("#212121")};
+        configuration.setColors(array);
+
+
+        smallerarc = (SimpleArcLoader) findViewById(R.id.smallerarc);
+        inenrArc = (SimpleArcLoader) findViewById(R.id.innerArc);
+        outerArc = (SimpleArcLoader) findViewById(R.id.outerArc);
+
+        configuration.setAnimationSpeed(SimpleArcLoader.SPEED_FAST);
+        smallerarc.refreshArcLoaderDrawable(configuration);
+
+        configuration.setAnimationSpeed(SimpleArcLoader.SPEED_MEDIUM);
+        inenrArc.refreshArcLoaderDrawable(configuration);
+
+        configuration.setAnimationSpeed(SimpleArcLoader.SPEED_SLOW);
+        outerArc.refreshArcLoaderDrawable(configuration);
         //Added preview of scanned barcode
         //ImageView imageView = (ImageView) findViewById(R.id.barcodePreview);
         //imageView.setImageBitmap(encodeToQrCode("ON Purpose bababy toooh yeah oh babay yeah this is sooo great like what", 500, 500));
@@ -130,27 +169,7 @@ public class MainActivity extends Activity {
         return bmp;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
 
-        barcodeView.resume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        barcodeView.pause();
-    }
-
-    public void pause(View view) {
-        barcodeView.pause();
-    }
-
-    public void resume(View view) {
-        barcodeView.resume();
-    }
 
     public void triggerScan(View view) {
         barcodeView.decodeSingle(callback);
