@@ -32,13 +32,17 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.CompoundBarcodeView;
+import com.journeyapps.barcodescanner.camera.CameraSettings;
 import com.leo.simplearcloader.ArcConfiguration;
 import com.leo.simplearcloader.SimpleArcDialog;
 import com.leo.simplearcloader.SimpleArcLoader;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This sample performs continuous scanning, displaying the barcode and source image whenever
@@ -56,7 +60,11 @@ public class MainActivity extends AppCompatActivity {
     ImageView imageView;
 
     String code;
-    int currentPane = 0;
+    int numScanned = 0;
+    int currentPane = 1;
+    int numOfPanes = 0;
+    Map<Integer, String> codes = new HashMap<>();
+    String[] chunks;
 
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -71,15 +79,37 @@ public class MainActivity extends AppCompatActivity {
             Integer num = Integer.parseInt(resultString.substring(0, 2));
 
 
+
+            // If chunks is not initialized and we read the initial qr code
+            if (chunks == null && num == 0) {
+                numOfPanes = Integer.parseInt(resultString.substring(2));
+                chunks = new String[numOfPanes+1];
+                chunks[0] = "";
+                displayText.setText("0/" + numOfPanes);
+            } else if(chunks != null && chunks.length != 0){
+
+                if(num > numOfPanes+1 || num < 0){
+                    return;
+                }
+
+                if ( chunks[num] == null) {
+                    numScanned++;
+                    chunks[num] = resultString.substring(3);
+                    displayText.setText(numScanned + "/" + numOfPanes);
+                }
+            }
+
+            /*
             if (num == currentPane) {
+                displayText.setText(currentPane + "/" + numOfPanes);
                 currentPane = num + 1;
                 Log.d(String.valueOf(num), result.toString());
                 code += resultString.substring(3);
-                displayText.setText(String.valueOf(num));
                 //displayText.setText("Completed");
             } else {
                 //displayText.setText("Scanning");
             }
+            */
 
 
         }
@@ -108,6 +138,9 @@ public class MainActivity extends AppCompatActivity {
         barcodeView = (CompoundBarcodeView) findViewById(R.id.barcode_scanner);
         barcodeView.decodeContinuous(callback);
         barcodeView.setStatusText("");
+        barcodeView.getBarcodeView().getCameraSettings().setAutoFocusEnabled(false);
+        barcodeView.getBarcodeView().getCameraSettings().setFocusMode(CameraSettings.FocusMode.CONTINUOUS);
+
         barcodeView.pause();
 
         displayText = (TextView) findViewById(R.id.displayText);
@@ -121,6 +154,9 @@ public class MainActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_DOWN:
                         Log.d("DOWN", "DOWN");
                         code = "";
+                        displayText.setText("0");
+                        if (chunks != null)
+                            chunks = null;
                         //screen.setVisibility(View.GONE);
                         imageView.setImageBitmap(null);
                         smallerarc.setVisibility(View.VISIBLE);
@@ -130,10 +166,15 @@ public class MainActivity extends AppCompatActivity {
                         return true;
 
                     case MotionEvent.ACTION_UP:
-                        Log.d("UP", code);
+                        numScanned = 0;
+                        currentPane = 1;
+
+                        if(chunks != null)
+                        for (String chunk : chunks) {
+                            code += chunk;
+                        }
                         code = code.replaceAll(System.getProperty("line.separator"), "");
                         //displayText.setText(code);
-                        currentPane = 0;
                         imageView.setImageBitmap(StringToBitMap(code));
                         //screen.setVisibility(View.VISIBLE);
                         smallerarc.setVisibility(View.GONE);
