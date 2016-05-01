@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -63,21 +64,19 @@ public class MainActivity extends AppCompatActivity {
     private BarcodeCallback callback = new BarcodeCallback() {
         @Override
         public void barcodeResult(BarcodeResult result) {
-            if (result.getText() != null) {
-                barcodeView.setStatusText(result.getText());
-            }
             //Added preview of scanned barcodef
-            imageView.setImageBitmap(result.getBitmapWithResultPoints(Color.YELLOW));
+            //imageView.setImageBitmap(result.getBitmapWithResultPoints(Color.YELLOW));
 
-            Integer num = Integer.parseInt(result.toString().substring(0, 2));
-            displayText.setText(String.valueOf(num));
+            String resultString = result.toString();
+            Integer num = Integer.parseInt(resultString.substring(0, 2));
 
 
-            if (num >= currentPane) {
+            if (num == currentPane) {
                 currentPane = num + 1;
-                Log.d("result", result.toString());
-                code += result.toString().substring(3);
-                displayText.setText("Completed");
+                Log.d(String.valueOf(num), result.toString());
+                code += resultString.substring(3);
+                displayText.setText(String.valueOf(num));
+                //displayText.setText("Completed");
             } else {
                 //displayText.setText("Scanning");
             }
@@ -123,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("DOWN", "DOWN");
                         code = "";
                         //screen.setVisibility(View.GONE);
+                        imageView.setImageBitmap(null);
                         smallerarc.setVisibility(View.VISIBLE);
                         inenrArc.setVisibility(View.VISIBLE);
                         outerArc.setVisibility(View.VISIBLE);
@@ -131,7 +131,8 @@ public class MainActivity extends AppCompatActivity {
 
                     case MotionEvent.ACTION_UP:
                         Log.d("UP", code);
-                        displayText.setText(code);
+                        code = code.replaceAll(System.getProperty("line.separator"), "");
+                        //displayText.setText(code);
                         currentPane = 0;
                         imageView.setImageBitmap(StringToBitMap(code));
                         //screen.setVisibility(View.VISIBLE);

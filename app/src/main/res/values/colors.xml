@@ -15,8 +15,12 @@
     <color name="cloud">#fbfcfc</color>
     <color name="darkCloud">#f0f4f4</color>
 
-    <color name="background">#212121</color>
+
+    <color name="background">#AA212121</color>
     <color name="backgroundCard">#27292b</color>
+    <color name="backgroundTranslucent">#AA212121</color>
+    <color name="backgroundCardTranslucent">#8827292b</color>
+
 
     <color name="flatDarkGreen">#27ae60</color>
     <color name="flatYellow">#f1c40f</color>
